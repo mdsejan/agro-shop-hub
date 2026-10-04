@@ -37,7 +37,7 @@ export function CheckoutModal({ product, onClose }: { product: Product | null; o
     if (!product) return;
     const parsed = schema.safeParse({ ...form, quantity: qty });
     if (!parsed.success) {
-      toast.error(parsed.error.issues[0].message);
+      toast.error(parsed.error.issues[0]?.message ?? "Invalid input");
       return;
     }
     setLoading(true);

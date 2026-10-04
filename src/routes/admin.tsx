@@ -86,7 +86,7 @@ function AuthCard() {
         ? await supabase.auth.signInWithPassword({ email, password })
         : await supabase.auth.signUp({ email, password, options: { emailRedirectTo: `${window.location.origin}/admin` } });
     setLoading(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     if (mode === "up") toast.success("Check your email to confirm your account.");
   };
 
@@ -132,11 +132,11 @@ function Dashboard({ email }: { email: string }) {
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const parsed = productSchema.safeParse({ ...form, price: Number(form.price) });
-    if (!parsed.success) return toast.error(parsed.error.issues[0].message);
+    if (!parsed.success) { toast.error(parsed.error.issues[0]?.message ?? "Invalid input"); return; }
     setSaving(true);
     const { error } = await supabase.from("products").insert({ ...parsed.data, image_url: parsed.data.image_url || null });
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) { toast.error(error.message); return; }
     toast.success("Product added");
     setForm(empty);
     qc.invalidateQueries({ queryKey: ["products"] });
