@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { OrderManagement } from "@/components/OrderManagement";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CATEGORIES, formatPrice, productsQuery } from "@/lib/products";
 
 export const Route = createFileRoute("/admin")({
@@ -50,7 +52,7 @@ function AdminPage() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader />
-      <main className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
+      <main className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
         {!ready ? (
           <Loader2 className="mx-auto h-6 w-6 animate-spin text-primary" />
         ) : !session ? (
@@ -146,7 +148,7 @@ function Dashboard({ email }: { email: string }) {
     <div className="space-y-8 animate-rise">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-3xl font-semibold">Product management</h1>
+          <h1 className="text-3xl font-semibold">Admin dashboard</h1>
           <p className="text-sm text-muted-foreground">Signed in as {email}</p>
         </div>
         <Button variant="outline" size="sm" onClick={() => supabase.auth.signOut()}>
@@ -154,6 +156,15 @@ function Dashboard({ email }: { email: string }) {
         </Button>
       </div>
 
+      <Tabs defaultValue="orders" className="space-y-6">
+        <TabsList>
+          <TabsTrigger value="orders">Order management</TabsTrigger>
+          <TabsTrigger value="products">Product management</TabsTrigger>
+        </TabsList>
+        <TabsContent value="orders">
+          <OrderManagement />
+        </TabsContent>
+        <TabsContent value="products" className="space-y-8">
       <form onSubmit={submit} className="grid gap-4 rounded-2xl bg-card p-6 shadow-card sm:grid-cols-2">
         <div className="space-y-1.5 sm:col-span-2">
           <Label htmlFor="pname">Product name</Label>
@@ -202,6 +213,8 @@ function Dashboard({ email }: { email: string }) {
           ))}
         </ul>
       </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
